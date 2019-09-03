@@ -1,0 +1,10 @@
+{{#if groups ~}}
+    {{~heading 2}} Index
+
+    {{~#each groups ~}}
+        {{br}}{{br ~}}
+        {{heading 3}} {{title}}
+        {{~#each children}}{{br}}* [{{{name}}}]({{properURL url}}){{/each ~}}
+    {{/each ~}}
+
+{{/if}}

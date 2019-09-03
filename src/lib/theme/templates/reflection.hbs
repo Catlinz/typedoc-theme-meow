@@ -1,0 +1,43 @@
+{{{mainTitle}}}
+
+{{#with model~}}
+    {{#if hasComment}}{{{comment true}}}{{br 2}}{{/if ~}}
+{{/with}}
+
+{{#with model~}} 
+    {{#if (hasAncestor) ~}}
+        {{heading 4}} Extends {{#with typeHierarchy}}{{> extends}}{{/with ~}}
+    {{/if ~}}
+{{/with}}
+
+{{#if model.implementedTypes ~}}
+    {{heading 4}} Implements {{#each model.implementedTypes}}{{type}}{{#unless @last}}, {{/unless}}{{/each ~}}
+{{/if}}
+
+{{#if model.implementedBy ~}}
+    {{heading 2}} Implemented by
+    {{~br}}{{br}}
+    {{~#each model.implementedBy}}* {{{type}}}{{/each ~}}
+{{/if}}
+
+{{#if model.signatures ~}}
+    {{{heading 2}}} Callable
+    {{~br}}{{br}}
+    {{~#with model ~}}
+        {{~#each signatures}}{{{signature 3}}}{{br 2}}{{/each ~}}
+    {{/with ~}}
+{{/if}}
+
+{{#if model.indexSignature ~}}
+    {{heading 2}} Indexable
+    {{~br 2}}
+    {{~#with model}}{{> member.indexSignatures}}{{/with ~}}
+{{/if}}
+
+{{#with model ~}}
+    {{#if (shouldShowIndex) ~}}
+        {{~> index ~}}
+        {{~br 2}}
+    {{~/if ~}}
+    {{~> members ~}}
+{{/with}}

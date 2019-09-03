@@ -1,0 +1,96 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        // If we're not waiting on a promise (especially on returned from a function) then we should have to explicitly say so.
+        // This issue has caused problems in the past.
+        "await-promise": true,
+        "callable-types": false,
+        // Unless it's something like if(..) doSomething(); then braces are required, to eliminate potential future errors when modifying the code.
+        "curly": [true, "ignore-same-line"],
+        "arrow-parens": false,
+        // Warns of functions used that are marked with a @deprecated JSDoc comment.
+        "deprecation": true,
+        "indent": [true, "spaces", 4],
+        // Disables interfaces always needing to be prefixed with captial I.
+        "interface-name": false,
+        // Generally, we want a class to be represented by a single file for that class.
+        "max-classes-per-file": [true, 3],
+        // This just gets really annoying and doesn't really help that much.
+        "max-line-length": false,
+        "member-ordering": false,
+        // I use this sometimes when doing type assertions that less safe or needed due to type definition errors.
+        "no-angle-bracket-type-assertion": false,
+        // Using any throws away type safety, so if we use it we need to be explicit by telling tslint to ignore it.
+        "no-any": true,
+        // I LIKE bitwise operators, thank you very much.
+        "no-bitwise": false,
+        // Generally, we don't want to use raw console.* statements in the actual code.
+        "no-console": {
+            "severity": "warning"
+        },
+        // Bad.  Obviously.
+        "no-duplicate-switch-case": true,
+        // Promises returned by functions must be handled appropriately.  Same reasoning as await-promise.
+        "no-floating-promises": true,
+        // This is generally an error, since you want to use for...of to iterate over array elements.
+        "no-for-in-array": true,
+        // Generally, using ${} in a non template string is a mistake.  This tells you that.
+        "no-invalid-template-strings": true,
+        // If you're returning a promise directly from an async function, you don't need to await it.
+        "no-return-await": true,
+        // Is usually not a good thing since you can generally use arrow functions to get around it.
+        "no-this-assignment": {
+            "severity": "warning"
+        },
+        // OMG, this gets SOOO annoying!
+        "no-trailing-whitespace": false,
+        // x => f(x) should be replaced with just x.  Readability and efficeiency.  I can't speel.
+        "no-unnecessary-callback-wrapper": true,
+        // Makes code cleaner if you don't use unnesseccccarryyy qualifiers (e.g., A.x when you could just do x).
+        "no-unnecessary-qualifier": true,
+        // If a type assertion (cast) doesn't change the type, then it will make the code cleaner if it's not there.
+        "no-unnecessary-type-assertion": {"severity": "warning"},
+        // Same reasoning as no-any.
+        "no-unsafe-any": {"severity": "warning"},
+        // Generally, unused expressions are... well... unused.
+        "no-unused-expression": [true, "allow-fast-null-checks", "allow-new"],
+        // Generally not an issue with JavaScript, since things are hoisted anyways.
+        "no-use-before-declare": false,
+        // SO ANNOYING, OMG!
+        "object-literal-sort-keys": false,
+        // Requires things like if statements to have the opening brace on the same line as the if statement, e.g. if (...) {
+        "one-line": [true, "check-open-brace"],
+        // Disabled, don't feel it's that important and gets annoying more than anything.
+        "only-arrow-functions": false,
+        // SO. VERY. ANNOYING.
+        "ordered-imports": false,
+        // Sometimes I just like to use a normal for loop, OK?
+        "prefer-for-of": false,
+        // Kind of annoying more than anything.  Makes it so that if you don't use `this` in a method, it wants you to convert to a static function.  No.
+        "prefer-function-over-method": false,
+        // Just looks nicer, more readable.
+        "prefer-method-signature": true,
+        // Generally more readable using {...object} than Object.assign(...).
+        "prefer-object-spread": true,
+        // Always use single quotes except for in strings that contain single quotes.  Is a style/consistency thing.
+        "quotemark": [true, "single", "avoid-escape"],
+        // Variables must be of same type to be added with the + operator.
+        "restrict-plus-operands": false,
+        // Disallows type checks that it things would always be false or always be true, but is a bit iffy.
+        "strict-type-predicates": false,
+        // No.
+        "typedef-whitespace": false,
+        // It can make things more clear sometimes to use overloaded function signatures rather than union type or optional parameter.
+        "unified-signatures": false,
+        // 
+        "variable-name": [true, 
+            "ban-keywords",
+            "check-format", 
+            "allow-snake-case", // allows_snake_case
+            "allow-leading-underscore",
+            "require-const-for-all-caps" // Anything that's ALL_CAPPS must be declared const.
+        ],
+        // No.  Just no.
+        "whitespace": false
+    }
+}

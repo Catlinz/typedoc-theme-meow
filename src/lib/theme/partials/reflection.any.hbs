@@ -1,0 +1,30 @@
+{{#if (isVariable) ~}}
+    {{{variable 4}}}
+    {{~br 2 ~}}
+{{~/if ~}}
+
+{{#if (isFunction) ~}}
+    {{#each signatures ~}}
+        {{{signature 3}}}
+        {{~br 2 ~}}
+    {{~/each~}}
+{{~/if ~}}
+
+{{#if (isTypeAlias) ~}}
+    {{{typeAlias 4}}}
+    {{~br 2 ~}}
+{{~/if ~}}
+
+{{#if (isObjectLiteral) ~}}
+    {{{objectLiteral 3}}}
+    {{~br 2 ~}}
+{{~/if ~}}
+
+{{#if (isCallSignature) ~}}
+    {{{signature 3}}}
+    {{~br 2 ~}}
+{{~/if ~}}
+
+{{#if (isOtherReflection) ~}}
+    {{~> member}}
+{{~/if ~}}

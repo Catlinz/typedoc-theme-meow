@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "experimentalDecorators": true,
+    "lib": ["es2016", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "outDir": "./dist",
+    "removeComments": true,
+    "sourceMap": false,
+    "strictNullChecks": false,
+    "target": "es2015"
+  },
+  "exclude": ["node_modules", "./src/test", "typedoc", "**/*.spec.ts"]
+}

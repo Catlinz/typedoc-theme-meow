@@ -1,0 +1,11 @@
+
+\
+{{title}}
+---
+{{#each children ~}}
+    {{#unless hasOwnDocument ~}}
+        {{#unless inheritedFrom ~}}
+            {{~> member}}
+        {{~/unless ~}}
+    {{/unless ~}}
+{{/each}}

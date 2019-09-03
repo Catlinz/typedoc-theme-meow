@@ -1,0 +1,39 @@
+{{#if signatures ~}}
+    SIG
+    {{#each signatures ~}}
+        {{br}}{{{signature 3}}}{{br 2}}
+    {{~/each ~}}
+{{/if ~}}
+
+{{#if indexSignature ~}}
+    {{br}}{{~> member.indexSignatures}}
+{{~/if ~}}
+
+{{#ifIsLiteralType true ~}}
+    {{br}}{{{objectLiteral 3}}}{{br 2}}
+{{~/ifIsLiteralType ~}}
+
+{{#ifIsLiteralType false ~}}
+    LITERAL TYPE FALSE
+    {{#each children ~}}
+        {{#if signatures ~}}
+            SIG LITERAL
+            {{#if flags.isRest}}...{{/if}} {{{ name}}} {{#if isOptional}}?{{/if}}: function
+            {{~#each signatures}}{{br}}{{{signature 3}}}{{br 2}}{{/each ~}}
+        {{else ~}}
+            {{br}}{{{parameterNameAndType}}}
+            {{br}}{{{comment true}}}{{br 2}}
+
+            {{~#if children}}{{br}}{{> parameter}}{{/if ~}}
+
+            {{~#if type.declaration}}
+                {{#with type.declaration ~}}
+                    ## type.declaration 
+                    {{~br}}{{br}}
+                    {{~#ifIsLiteralType true}}{{{objectLiteral 3}}}{{br 2}}{{/ifIsLiteralType}}
+                    {{~#ifIsLiteralType false}}{{> parameter}}{{/ifIsLiteralType}}
+                {{/with ~}}
+            {{/if ~}}
+        {{/if ~}}
+    {{/each ~}}
+{{/ifIsLiteralType}}

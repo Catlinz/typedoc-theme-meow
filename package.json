@@ -1,0 +1,44 @@
+{
+  "name": "typedoc-plugin-markdown",
+  "version": "1.0.0",
+  "description": "A theme for TypeDoc that generates Markdown documentation with a specific file structure / format.",
+  "main": "dist/index.js",
+  "scripts": {
+    "lint": "tslint --project ./tsconfig.json",
+    "build": "rm -rf dist && tsc && copyfiles --up 3 ./src/**/*.hbs ./dist/"
+  },
+  "author": "Catlin Zilinski",
+  "license": "MIT",
+  "engines": {
+    "node": ">=6"
+  },
+  "bugs": {
+    "url": "https://github.com/CatlinZ/typedoc-theme-meow/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CatlinZ/typedoc-theme-meow.git"
+  },
+  "keywords": [
+    "markdown",
+    "typescript",
+    "documentation",
+    "api",
+    "typedocplugin",
+    "typedoc"
+  ],
+  "peerDependencies": {
+    "typedoc": ">=0.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.7.2",
+    "arg": "^4.1.1",
+    "chalk": "^2.4.2",
+    "copyfiles": "^2.1.1",
+    "cross-spawn": "^6.0.5",
+    "tslint": "^5.18.0",
+    "typedoc": "0.15.0",
+    "typescript": "3.5.x"
+  },
+  "dependencies": {}
+}

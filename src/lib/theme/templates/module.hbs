@@ -1,0 +1,30 @@
+{{{mainTitle}}}
+
+{{#with model~}}
+    {{~#if hasComment}}{{{comment true}}}{{br 2}}{{/if ~}}
+{{/with ~}}
+
+{{#each model.groups ~}}
+    {{br}}\\{{br}}{{title}}{{br}}---{{br 2 ~}}
+    {{#each children ~}}
+        {{#if hasOwnDocument ~}}
+            {{reflectionSymbol}} [{{{name}}}]({{properURL url}}) {{#unless @last}}\\{{/unless}} {{~br ~}}
+        {{else ~}}
+            {{~> reflection.any ~}}
+            {{#if (shouldShowHR)}}{{#unless @last}}---{{br 2}}{{/unless}}{{/if ~}}
+        {{~/if ~}}
+    {{~/each ~}}
+{{/each ~}}
+
+{{#if model.signatures ~}}
+    \\{{br}}Callable{{br}}---{{br 2 ~}}
+    {{~#with model ~}}
+        {{~#each signatures}}{{> reflection.any }}{{/each ~}}
+    {{/with ~}}
+    {{br 2}}
+{{~/if ~}}
+
+{{#if model.indexSignature ~}}
+    \\{{br}}Indexable{{br}}---{{br 2 ~}}
+    {{~#with model}}{{> member.indexSignatures}}{{/with ~}}
+{{/if}}
