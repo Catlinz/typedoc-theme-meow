@@ -11,12 +11,12 @@ import {
     TypeOperatorType,
     UnionType,
 } from 'typedoc/dist/lib/models/types';
-import { INLINE, JOIN_COMMA, JOIN_PIPE } from './constants';
-import { properURL } from './formatting-basic';
+import { INLINE, JOIN_COMMA, JOIN_PIPE, TYPE_VOID, TYPE_UNKNOWN, EMPTY_STR, DBL_QUOTE_STR, JOIN_AND, BRACE_CURLY_CLOSE, BRACE_CURLY_OPEN, TICK_STR, BRACKET_CLOSE, BRACKET_OPEN, BRACKET_EMPTY } from './constants';
+import { formatURLStr, properURL } from './formatting-basic';
 import { signature } from './reflection-signature';
 
 export function type<T extends Type>(this: T, inline?: 'inline') {
-    if (!this) { return 'void'; }
+    if (!this) { return TYPE_VOID; }
 
     if (this instanceof ReflectionType && this.declaration) {
         return getReflectionType(this);
@@ -96,6 +96,10 @@ export function isCallSignature(this: Reflection) {
     return this.kind === ReflectionKind.CallSignature;
 }
 
+export function isEnumMember(this: Reflection) {
+    return this.kind === ReflectionKind.EnumMember;
+}
+
 export function isOtherReflection(this: Reflection) {
     switch (this.kind) {
         case ReflectionKind.Variable:
@@ -103,6 +107,7 @@ export function isOtherReflection(this: Reflection) {
         case ReflectionKind.TypeAlias:
         case ReflectionKind.ObjectLiteral:
         case ReflectionKind.CallSignature:
+        case ReflectionKind.EnumMember:
             return false;
 
         default:
@@ -113,10 +118,10 @@ export function isOtherReflection(this: Reflection) {
 function getReflectionType(model: ReflectionType) {
     if (model.declaration && model.declaration.children) {
         const inner = model.declaration.children.map(it => {
-            return `\`${it.name}\`: ${type.call(it.type)}`;
+            return TICK_STR + it.name + '`: ' + type.call(it.type);
         }).join(JOIN_COMMA);
 
-        return `{${inner}}`;
+        return BRACE_CURLY_OPEN + inner + BRACE_CURLY_CLOSE;
     }
 
     if (model.declaration && model.declaration.signatures) {
@@ -127,33 +132,33 @@ function getReflectionType(model: ReflectionType) {
         return type.call(model.declaration.type);
     }
 
-    return model.declaration ? model.declaration.name : 'unknown';
+    return model.declaration ? model.declaration.name : TYPE_UNKNOWN;
 }
 
 function getReferenceType(model: ReferenceType) {
     const reflection = model.reflection
-        ? [`[${model.reflection.name}](${properURL(model.reflection.url)})`]
+        ? [formatURLStr(model.reflection.name, properURL(model.reflection.url))]
         : [model.name];
     if (model.typeArguments) {
-        reflection.push(`‹${model.typeArguments.map(typeArgument => `${type.call(typeArgument)}`).join(', ')}›`);
+        reflection.push(TYPE_START + model.typeArguments.map(typeArgument => type.call(typeArgument) as string).join(JOIN_COMMA) + TYPE_END);
     }
-    return reflection.join('');
+    return reflection.join(EMPTY_STR);
 }
 
 function getArrayType(model: ArrayType) {
-    return `${type.call(model.elementType)}[]`;
+    return type.call(model.elementType) + BRACKET_EMPTY;
 }
 
 function getUnionType(model: UnionType, expand?: boolean) {
-    return model.types.map(unionType => type.call(unionType)).join(' | ');
+    return model.types.map(unionType => type.call(unionType)).join(JOIN_PIPE);
 }
 
 function getIntersectionType(model: IntersectionType, expand?: boolean) {
-    return model.types.map(intersectionType => type.call(intersectionType)).join(' & ');
+    return model.types.map(intersectionType => type.call(intersectionType)).join(JOIN_AND);
 }
 
 function getTupleType(model: TupleType, expand?: boolean) {
-    return `[${model.elements.map(element => type.call(element)).join(', ')}]`;
+    return BRACKET_OPEN + model.elements.map(element => type.call(element)).join(JOIN_COMMA) + BRACKET_CLOSE;
 }
 
 function getIntrinsicType(model: IntrinsicType) {
@@ -161,5 +166,8 @@ function getIntrinsicType(model: IntrinsicType) {
 }
 
 function getStringLiteralType(model: StringLiteralType) {
-    return `"${model.value}"`;
+    return DBL_QUOTE_STR + model.value + DBL_QUOTE_STR;
 }
+
+export const TYPE_START = '‹';
+export const TYPE_END = '›';

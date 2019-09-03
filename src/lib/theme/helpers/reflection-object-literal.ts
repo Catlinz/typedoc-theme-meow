@@ -1,23 +1,24 @@
 import { DeclarationReflection, Reflection, ReflectionKind } from 'typedoc';
 import { ReflectionGroup } from 'typedoc/dist/lib/models/ReflectionGroup';
-import { DBL_NEWLINE, EMPTY_STR, INLINE, SPACE_STR, TICK_STR } from './constants';
-import { lowercase } from './formatting-basic';
+
+import { DBL_NEWLINE, EMPTY_STR, INLINE, SPACE_STR, TICK_STR, EQUAL_SPACED_STR, COLON_SPACED_STR, JOIN_COMMA, TABLE_COL_PROP, TABLE_COL_TYPE, TABLE_COL_DEFAULT, TABLE_COL_DESC, PIPE_SPACED, DASH_STR, BRACE_CURLY_OPEN, BRACE_CURLY_CLOSE } from './constants';
 import { reflection, reflection_name } from './reflection-any';
 import { _getHeadingString } from './reflection-basic';
+import { lowercase } from './formatting-basic';
 import { comment } from './reflection-comment';
 import { type } from './type';
 
 export function objectLiteral(this: DeclarationReflection, headingLevel: number = 0, inline: 'inline', level: number = 0) {
     if (inline === INLINE) {
         if (this.name) {
-            return TICK_STR + this.name + TICK_STR + ' = ' + nested_object_literal(this, inline, level);
+            return TICK_STR + this.name + TICK_STR + EQUAL_SPACED_STR + nested_object_literal(this, inline, level);
         } else {
             return nested_object_literal(this, inline, level);
         }
     }
 
     if (level > 0) {
-        return TICK_STR + this.name + TICK_STR + ' : ' + nested_object_literal(this, inline, level);
+        return TICK_STR + this.name + TICK_STR + COLON_SPACED_STR + nested_object_literal(this, inline, level);
     }
 
     const text: string[] = [TICK_STR];
@@ -25,7 +26,7 @@ export function objectLiteral(this: DeclarationReflection, headingLevel: number 
     if (this.flags && this.flags.length) { text.push(lowercase(this.flags), SPACE_STR); }
     text.push(this.name, TICK_STR);
 
-    const commentText = (inline !== INLINE) ? comment.call(this, true) : EMPTY_STR;
+    const commentText = (inline !== INLINE) ? comment.call(this, true) as string : EMPTY_STR;
     if (commentText) {
         text.push(DBL_NEWLINE, commentText);
     }
@@ -41,10 +42,10 @@ function object_literal_table(ref: DeclarationReflection): string {
     const hasDefaultValues = ref.children.some(it => it.defaultValue);
     const hasComments = ref.children.some(it => it.comment && (it.comment.text || it.comment.shortText));
 
-    const headers = ['Property', 'Type'];
+    const headers = [TABLE_COL_PROP, TABLE_COL_TYPE];
 
-    if (hasDefaultValues) { headers.push('Default'); }
-    if (hasComments) { headers.push('Description'); }
+    if (hasDefaultValues) { headers.push(TABLE_COL_DEFAULT); }
+    if (hasComments) { headers.push(TABLE_COL_DESC); }
 
     let functionRows: string[] = [];
     let propRows: string[] = [];
@@ -57,7 +58,7 @@ function object_literal_table(ref: DeclarationReflection): string {
         }
     }
 
-    return headers.join(' | ') + ' |\n' + headers.map(() => '------').join(' | ') + ' |\n' + [...functionRows, ...propRows].join('');
+    return headers.join(PIPE_SPACED) + ' |\n' + headers.map(() => '------').join(' | ') + ' |\n' + [...functionRows, ...propRows].join(EMPTY_STR);
 }
 
 function object_table_rows(group: ReflectionGroup, hasDefaultValues: boolean, hasComments: boolean): string[] {
@@ -70,14 +71,14 @@ function object_table_rows(group: ReflectionGroup, hasDefaultValues: boolean, ha
         row.push(getTypeOut(prop));
 
         if (hasDefaultValues) {
-            row.push((prop as DeclarationReflection).defaultValue || '-');
+            row.push((prop as DeclarationReflection).defaultValue || DASH_STR);
         }
 
         if (hasComments) {
-            row.push(comment.call(prop, false) || '-');
+            row.push(comment.call(prop, false) || DASH_STR);
         }
 
-        rows.push(row.join(' | ') + ' |\n');
+        rows.push(row.join(PIPE_SPACED) + ' |\n');
     }
 
     return rows;
@@ -104,7 +105,7 @@ export function nested_object_literal(ref: DeclarationReflection, inline?: 'inli
     }
 
     if (inline === INLINE) {
-        return '{' + [...methods, ...variables].join(', ') + '}';
+        return BRACE_CURLY_OPEN + [...methods, ...variables].join(JOIN_COMMA) + BRACE_CURLY_CLOSE;
     } else {
         const prefix = NBSP.repeat((level + 1) * 4);
         return '{<br>' + [...methods, ...variables].map(it => prefix + it).join(',<br>') + '<br>}';

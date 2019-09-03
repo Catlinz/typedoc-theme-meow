@@ -1,20 +1,35 @@
 import { Reflection, ReflectionKind } from 'typedoc';
 
+import { EMPTY_STR } from './constants';
+
 export function reflectionSymbol(this: Reflection): string {
     switch (this.kind) {
         case ReflectionKind.Class:
-            return '🅲';
+            return SYM_CLASS;
+
         case ReflectionKind.Enum:
-            return '🅴';
+            return SYM_ENUM;
+        
         case ReflectionKind.Function:
-            return '🅵';
+            return SYM_FUNCTION;
+        
         case ReflectionKind.Interface:
-            return '🅸';
+            return SYM_INTERFACE;
+        
         case ReflectionKind.TypeAlias:
-            return '🆃';
+            return SYM_TYPEALIAS;
+        
         case ReflectionKind.Variable:
-            return '🆅';
+            return SYM_VARIABLE;
+        
         default:
-            return '';
+            return EMPTY_STR;
     }
 }
+
+const SYM_CLASS = '🅲';
+const SYM_ENUM = '🅴';
+const SYM_FUNCTION = '🅵';
+const SYM_INTERFACE = '🅸';
+const SYM_TYPEALIAS = '🆃';
+const SYM_VARIABLE = '🆅';

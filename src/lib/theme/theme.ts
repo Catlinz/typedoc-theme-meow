@@ -68,13 +68,11 @@ export default class MarkdownTheme extends Theme {
 
         if (!listings.includes(this.indexName)) {
             isOutputDirectory = false;
-            return;
         }
 
         listings.forEach(listing => {
             if (!allowedListings.includes(listing)) {
                 isOutputDirectory = false;
-                return;
             }
         });
 

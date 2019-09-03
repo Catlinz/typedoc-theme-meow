@@ -1,21 +1,24 @@
 import { DeclarationReflection, Reflection, ReflectionKind } from 'typedoc';
 
 export function shouldShowHR(this: Reflection): boolean {
+    if (!this.kind) { return false; }
+
     switch (this.kind) {
         case ReflectionKind.TypeAlias:
         case ReflectionKind.Variable:
+        case ReflectionKind.EnumMember:
             return false;
         default:
             return true;
     }
 }
 
-export function shouldShowIndex(this: DeclarationReflection): boolean {
-    return this.kind === ReflectionKind.Global;
+export function shouldShowIndex(this: Reflection): boolean {
+    return !!this && this.kind === ReflectionKind.Global;
 }
 
 export function shouldShowMemberTitle(this: DeclarationReflection): boolean {
-    if (!this.name) { return false; }
+    if (!this || !this.name) { return false; }
 
     switch (this.kind) {
         case ReflectionKind.Constructor:

@@ -1,24 +1,30 @@
-{{{mainTitle}}}
+{{{reflectionTitle}}}
+===
 
 {{#with model~}}
     {{#if hasComment}}{{{comment true}}}{{br 2}}{{/if ~}}
-{{/with}}
+{{/with ~}}
+
+{{#with model~}}
+    {{#if hasOwnDocument}}{{{definition}}}{{br 2}}{{/if ~}}
+{{/with ~}}
 
 {{#with model~}} 
     {{#if (hasAncestor) ~}}
-        {{heading 4}} Extends {{#with typeHierarchy}}{{> extends}}{{/with ~}}
+        {{heading 4}} Extends {{#with typeHierarchy}}{{> extends}}{{br 2}}{{/with ~}}
     {{/if ~}}
-{{/with}}
+{{/with ~}}
 
 {{#if model.implementedTypes ~}}
-    {{heading 4}} Implements {{#each model.implementedTypes}}{{type}}{{#unless @last}}, {{/unless}}{{/each ~}}
-{{/if}}
+    {{heading 4}} Implements {{#each model.implementedTypes}}{{type}}{{#unless @last}}, {{/unless}}{{/each}}{{br 2 ~}}
+{{/if ~}}
 
 {{#if model.implementedBy ~}}
     {{heading 2}} Implemented by
-    {{~br}}{{br}}
+    {{~br 2 ~}}
     {{~#each model.implementedBy}}* {{{type}}}{{/each ~}}
-{{/if}}
+    {{br 2 ~}}
+{{/if ~}}
 
 {{#if model.signatures ~}}
     {{{heading 2}}} Callable
@@ -26,18 +32,20 @@
     {{~#with model ~}}
         {{~#each signatures}}{{{signature 3}}}{{br 2}}{{/each ~}}
     {{/with ~}}
-{{/if}}
+    {{br 2 ~}}
+{{/if ~}}
 
 {{#if model.indexSignature ~}}
     {{heading 2}} Indexable
     {{~br 2}}
     {{~#with model}}{{> member.indexSignatures}}{{/with ~}}
-{{/if}}
+    {{br 2 ~}}
+{{/if ~}}
 
 {{#with model ~}}
     {{#if (shouldShowIndex) ~}}
         {{~> index ~}}
         {{~br 2}}
     {{~/if ~}}
-    {{~> members ~}}
+    {{~> reflection.children}}
 {{/with}}

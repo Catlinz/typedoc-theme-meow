@@ -1,4 +1,5 @@
-{{{mainTitle}}}
+{{{reflectionTitle}}}
+===
 
 {{#with model~}}
     {{~#if hasComment}}{{{comment true}}}{{br 2}}{{/if ~}}
@@ -10,8 +11,11 @@
         {{#if hasOwnDocument ~}}
             {{reflectionSymbol}} [{{{name}}}]({{properURL url}}) {{#unless @last}}\\{{/unless}} {{~br ~}}
         {{else ~}}
-            {{~> reflection.any ~}}
-            {{#if (shouldShowHR)}}{{#unless @last}}---{{br 2}}{{/unless}}{{/if ~}}
+            {{{reflection 3}}}
+            {{~#unless @last ~}}
+                {{~#if (shouldShowHR)}}{{br 2}}----{{/if ~}}
+                {{~br 2 ~}}
+            {{/unless ~}}
         {{~/if ~}}
     {{~/each ~}}
 {{/each ~}}
@@ -19,7 +23,10 @@
 {{#if model.signatures ~}}
     \\{{br}}Callable{{br}}---{{br 2 ~}}
     {{~#with model ~}}
-        {{~#each signatures}}{{> reflection.any }}{{/each ~}}
+        {{~#each signatures ~}}
+            {{{reflection 3}}}
+            {{~#unless @last}}{{br 2}}{{/unless ~}}
+        {{~/each ~}}
     {{/with ~}}
     {{br 2}}
 {{~/if ~}}

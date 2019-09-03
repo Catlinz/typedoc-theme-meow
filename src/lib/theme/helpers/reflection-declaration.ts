@@ -1,7 +1,8 @@
 import { DeclarationReflection, ReflectionKind } from 'typedoc';
+
 import { DBL_NEWLINE, EMPTY_STR, INLINE, QUESTION_STR, SPACE_STR, TICK_STR } from './constants';
-import { memberVisibilitySymbol } from './member-visibility-symbol';
 import { _getHeadingString } from './reflection-basic';
+import { memberVisibilitySymbol } from './member';
 import { comment } from './reflection-comment';
 import { sources } from './reflection-sources';
 import { type } from './type';
@@ -36,7 +37,7 @@ function declaration_title(ref: DeclarationReflection, showSymbol: boolean) {
 
     if (showSymbol) {
         if (ref.flags.isStatic) { text.push(STATIC_PREFIX); }
-        text.push(memberVisibilitySymbol.call(ref));
+        text.push(memberVisibilitySymbol(ref));
     }
 
     text.push(TICK_STR + ref.name + TICK_STR + (ref.flags.isOptional ? QUESTION_STR + TYPE_SEPARATOR : EMPTY_STR));
@@ -45,7 +46,7 @@ function declaration_title(ref: DeclarationReflection, showSymbol: boolean) {
     }
 
     if (ref.type) {
-        const typeStr = type.call(ref.type);
+        const typeStr = type.call(ref.type) as string;
         text.push(typeStr);
 
         if (ref.defaultValue && ref.defaultValue !== typeStr) {

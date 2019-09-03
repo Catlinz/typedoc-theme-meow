@@ -1,12 +1,13 @@
 import { ReflectionKind, SignatureReflection } from 'typedoc';
-import { BRACE_CLOSE, BRACE_OPEN, DBL_NEWLINE, EMPTY_STR, INLINE, JOIN_COMMA, QUESTION_STR, SPACE_STR, THREE_DOTS, TICK_STR } from './constants';
-import { memberVisibilitySymbol } from './member-visibility-symbol';
-import { parameterTable } from './parameter-table';
-import { _getHeadingString } from './reflection-basic';
+
+import { BRACE_CLOSE, BRACE_OPEN, DBL_NEWLINE, EMPTY_STR, INLINE, JOIN_COMMA, QUESTION_STR, SPACE_STR, THREE_DOTS, TICK_STR, TYPE_VOID, COLON_SPACED_STR } from './constants';
 import { comment, parseCommentText } from './reflection-comment';
+import { _getHeadingString } from './reflection-basic';
+import { parameterTable } from './parameter-table';
+import { typeParameters } from './type-parameters';
+import { memberVisibilitySymbol } from './member';
 import { sources } from './reflection-sources';
 import { type } from './type';
-import { typeParameters } from './type-parameters';
 
 export function signature(this: SignatureReflection, headingLevel: number = 0, inline?: 'inline'): string {
     if (inline === INLINE) { return signature_inline(this); }
@@ -53,7 +54,7 @@ export function signatureTitle(this: SignatureReflection, showSymbol: boolean = 
 
     if (showSymbol === true) {
         if (this.parent.flags.isStatic) { text.push(STATIC_PREFIX); }
-        text.push(memberVisibilitySymbol.call(this) + SPACE_STR);
+        text.push(memberVisibilitySymbol(this) + SPACE_STR);
     }
 
     text.push(TICK_STR + signature_name(this));
@@ -65,9 +66,9 @@ export function signatureTitle(this: SignatureReflection, showSymbol: boolean = 
 export function signature_name(ref: SignatureReflection|SignatureReflection[]) {
     if (Array.isArray(ref)) { ref = ref[0]; }
 
-    if (!ref) { return ''; }
+    if (!ref) { return EMPTY_STR; }
 
-    let name = '';
+    let name = EMPTY_STR;
     if (ref.name === __GET) { name = GET_PREFIX + ref.parent.name; }
     else if (ref.name === __SET) { name = SET_PREFIX + ref.parent.name; }
     else if (ref.name !== __CALL) { name = ref.name; }
@@ -76,10 +77,10 @@ export function signature_name(ref: SignatureReflection|SignatureReflection[]) {
 }
 
 export function signature_type(ref: SignatureReflection|SignatureReflection[], hideTypes?: boolean) {
-    if (!ref) { return 'void'; }
+    if (!ref) { return TYPE_VOID; }
     if (!Array.isArray(ref)) { ref = [ref]; }
 
-    if (ref.length === 0) { return 'void'; }
+    if (ref.length === 0) { return TYPE_VOID; }
 
     const sig = ref[ref.length - 1];
     const text: string[] = [];
@@ -87,7 +88,7 @@ export function signature_type(ref: SignatureReflection|SignatureReflection[], h
     if (sig.parameters) {
         const params = sig.parameters.map(p => {
             if (!hideTypes) {
-                return (p.flags.isRest ? THREE_DOTS : EMPTY_STR) + TICK_STR + p.name + TICK_STR + (p.flags.isOptional ? QUESTION_STR : EMPTY_STR) + TYPE_SEPARATOR + type.call(p.type);
+                return (p.flags.isRest ? THREE_DOTS : EMPTY_STR) + TICK_STR + p.name + TICK_STR + (p.flags.isOptional ? QUESTION_STR : EMPTY_STR) + COLON_SPACED_STR + type.call(p.type);
             } else {
                 return (p.flags.isRest ? THREE_DOTS : EMPTY_STR) + p.name + (p.flags.isOptional ? QUESTION_STR : EMPTY_STR);
             }
@@ -98,7 +99,7 @@ export function signature_type(ref: SignatureReflection|SignatureReflection[], h
         text.push(BRACES_EMPTY);
     }
 
-    if (sig.type) { text.push(TYPE_SEPARATOR, type.call(sig.type) as string); }
+    if (sig.type) { text.push(COLON_SPACED_STR, type.call(sig.type) as string); }
 
     return text.join(EMPTY_STR);
 }
@@ -112,6 +113,4 @@ const SET_PREFIX = 'set ';
 const STATIC_PREFIX = '🅢 ';
 
 const RETURNS_PREFIX = '**Returns** ';
-
-const TYPE_SEPARATOR = ' : ';
 const BRACES_EMPTY = '()';

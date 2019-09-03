@@ -1,17 +1,27 @@
 {
-  "compilerOptions": {
-    "declaration": false,
-    "experimentalDecorators": true,
-    "lib": ["es2016", "dom"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noImplicitAny": false,
-    "noUnusedLocals": true,
-    "outDir": "./dist",
-    "removeComments": true,
-    "sourceMap": false,
-    "strictNullChecks": false,
-    "target": "es2015"
-  },
-  "exclude": ["node_modules", "./src/test", "typedoc", "**/*.spec.ts"]
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es2018",
+        "declaration": false,
+        "experimentalDecorators": true,
+        "lib": [
+            "es6", "es2018", "dom"
+        ],
+        "noImplicitReturns": true,
+        "noImplicitAny": false,
+        "noFallthroughCasesInSwitch": true,
+        "noUnusedLocals": true,
+        
+        "outDir": "./dist",
+        "removeComments": true,
+        "sourceMap": false,
+        "strictNullChecks": false,
+    },
+    "exclude": [
+        "node_modules",
+        "./src/test",
+        "typedoc",
+        "**/*.spec.ts"
+    ]
 }

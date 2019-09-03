@@ -1,29 +1,27 @@
 import { ProjectReflection, Reflection } from 'typedoc';
+
+import { properURL, formatURLStr } from './formatting-basic';
 import { PageEvent } from 'typedoc/dist/lib/output/events';
-import { properURL } from './formatting-basic';
 import { reflectionSymbol } from './reflection-symbol';
+import { SPACE_STR } from './constants';
 
 export function breadcrumbs(this: PageEvent) {
-  if (!isVisible()) {
-    return '';
-  }
-  return breadcrumb(this.model, this.project, []);
+    return breadcrumb(this.model as Reflection, this.project, []);
 }
 
 function breadcrumb(model: Reflection, project: ProjectReflection, md: string[]) {
-  if (model && model.parent) {
-    breadcrumb(model.parent, project, md);
-    if (model.url) {
-      md.push(`[${reflectionSymbol.call(model)} ${model.name}](${properURL(model.url)})`);
+    if (model && model.parent) {
+        breadcrumb(model.parent, project, md);
+        if (model.url) {
+            md.push(formatURLStr(reflectionSymbol.call(model) + SPACE_STR + model.name, properURL(model.url)));
+        } else {
+            md.push(model.url);
+        }
     } else {
-      md.push(model.url);
+        md.push(formatURLStr(GLOBALS_STR, properURL(project.url)));
     }
-  } else {
-    md.push(`[Globals](${properURL(project.url)})`);
-  }
-  return md.join(' › ');
+    return md.join(CRUMB_SEP);
 }
 
-function isVisible() {
-  return true;
-}
+const CRUMB_SEP = ' › ';
+const GLOBALS_STR = 'Globals';

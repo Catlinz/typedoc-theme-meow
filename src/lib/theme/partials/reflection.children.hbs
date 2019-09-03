@@ -1,0 +1,22 @@
+{{#each groups ~}}
+    {{#unless allChildrenHaveOwnDocument ~}}
+        {{#unless allChildrenAreInherited ~}}
+            {{br 2}}\\{{br ~}}
+            {{title ~}}
+            {{br ~}}---{{br ~}}
+
+            {{#each children ~}}
+                {{#unless hasOwnDocument ~}}
+                    {{#unless inheritedFrom ~}}
+                        {{{reflection 3}}}
+                        {{~#unless @last ~}}
+                            {{~#if (shouldShowHR)}}{{br 2}}----{{/if ~}}
+                            {{~br 2 ~}}
+                        {{/unless ~}}
+                    {{~/unless ~}}
+                {{/unless ~}}
+            {{/each ~}}
+        
+        {{~/unless ~}}
+    {{/unless ~}}
+{{/each}}
