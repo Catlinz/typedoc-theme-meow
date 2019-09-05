@@ -35,6 +35,8 @@ export const JOIN_COMMA = ', ';
 export const JOIN_PIPE = '|';
 export const JOIN_AND = '&';
 
+export const NBSP = '&nbsp;';
+
 export const INLINE = 'inline';
 
 export const TYPE_STRING = 'string';

@@ -21,6 +21,12 @@ export function reflectionSymbol(this: Reflection): string {
         
         case ReflectionKind.Variable:
             return SYM_VARIABLE;
+
+        case ReflectionKind.ObjectLiteral:
+            return SYM_OBJECT;
+        
+        case ReflectionKind.Module:
+            return SYM_MODULE;
         
         default:
             return EMPTY_STR;
@@ -33,3 +39,5 @@ const SYM_FUNCTION = '🅵';
 const SYM_INTERFACE = '🅸';
 const SYM_TYPEALIAS = '🆃';
 const SYM_VARIABLE = '🆅';
+const SYM_OBJECT = '🅾';
+const SYM_MODULE = '🅼';

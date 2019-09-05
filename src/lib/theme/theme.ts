@@ -1,21 +1,16 @@
 import * as fs from 'fs-extra';
+
 import { NavigationItem, Renderer } from 'typedoc';
-import {
-    ContainerReflection,
-    DeclarationReflection,
-    ProjectReflection,
-    Reflection,
-    ReflectionKind,
-} from 'typedoc/dist/lib/models/reflections';
+import { ContainerReflection, DeclarationReflection, ProjectReflection, Reflection, ReflectionKind } from 'typedoc/dist/lib/models/reflections';
+import { DefaultTheme, TemplateMapping } from 'typedoc/dist/lib/output/themes/DefaultTheme';
 import { UrlMapping } from 'typedoc/dist/lib/output/models/UrlMapping';
 import { Theme } from 'typedoc/dist/lib/output/theme';
-import { DefaultTheme, TemplateMapping } from 'typedoc/dist/lib/output/themes/DefaultTheme';
 
 export default class MarkdownTheme extends Theme {
     /**
      * Mappings of reflections kinds to templates used by this theme.
      */
-    static MAPPINGS: TemplateMapping[] = [{
+    private static MAPPINGS: TemplateMapping[] = [{
         kind: [ReflectionKind.Class],
         isLeaf: false,
         directory: 'classes',
@@ -37,10 +32,10 @@ export default class MarkdownTheme extends Theme {
         template: 'module.hbs',
     }];
 
-    navigation: NavigationItem;
-    navigationTitlesMap = {};
-    hasGlobalsFile = false;
+    private navigation: NavigationItem;
+    private navigationTitlesMap = {};
 
+    // tslint:disable-next-line: no-any
     constructor(renderer: Renderer, basePath: string, options: any) {
         super(renderer, basePath);
         renderer.removeComponent('navigation');
@@ -50,7 +45,7 @@ export default class MarkdownTheme extends Theme {
         renderer.removeComponent('pretty-print');
     }
 
-    isOutputDirectory(outputDirectory: string): boolean {
+    public isOutputDirectory(outputDirectory: string): boolean {
         let isOutputDirectory = true;
         const allowedListings = [
             this.indexName,
@@ -79,18 +74,17 @@ export default class MarkdownTheme extends Theme {
         return isOutputDirectory;
     }
 
-    getUrls(project: ProjectReflection): UrlMapping[] {
+    public getUrls(project: ProjectReflection): UrlMapping[] {
         const urls: UrlMapping[] = [];
         const entryPoint = this.getEntryPoint(project);
 
         if (project.readme && this.application.options.getValue('readme') !== 'none') {
             entryPoint.url = this.globalsName;
-            urls.push(new UrlMapping(this.globalsName, entryPoint, 'reflection.hbs'));
+            urls.push(new UrlMapping(this.globalsName, entryPoint, 'globals.hbs'));
             urls.push(new UrlMapping(this.indexName, entryPoint, 'index.hbs'));
-            this.hasGlobalsFile = true;
         } else {
             entryPoint.url = this.indexName;
-            urls.push(new UrlMapping(this.indexName, entryPoint, 'reflection.hbs'));
+            urls.push(new UrlMapping(this.indexName, entryPoint, 'globals.hbs'));
         }
 
         if (entryPoint.children) {
@@ -113,13 +107,13 @@ export default class MarkdownTheme extends Theme {
         return urls;
     }
 
-    static getMapping(reflection: DeclarationReflection): TemplateMapping | undefined {
+    private static getMapping(reflection: DeclarationReflection): TemplateMapping | undefined {
         return MarkdownTheme.MAPPINGS.find(mapping => reflection.kindOf(mapping.kind));
     }
 
-    getNavigation(project: ProjectReflection) {
+    public getNavigation(project: ProjectReflection) {
         function createNavigationGroup(name: string, url = null) {
-            const navigationGroup = new NavigationItem(name, url);
+            const navigationGroup = new NavigationItem(name, url as string);
             navigationGroup.children = [];
             delete navigationGroup.cssClasses;
             delete navigationGroup.reflection;
@@ -148,7 +142,7 @@ export default class MarkdownTheme extends Theme {
         function addNavigationItem(reflection: DeclarationReflection, parentNavigationItem?: NavigationItem, group?) {
             let navigationGroup: NavigationItem;
             if (group) {
-                navigationGroup = group;
+                navigationGroup = group as NavigationItem;
             } else {
                 navigationGroup = getNavigationGroup(reflection);
             }
@@ -166,7 +160,7 @@ export default class MarkdownTheme extends Theme {
             if (reflection.children) {
                 reflection.children.forEach(reflectionChild => {
                     if (reflectionChild.hasOwnDocument) {
-                        addNavigationItem(reflectionChild as DeclarationReflection, nav, navigationGroup);
+                        addNavigationItem(reflectionChild, nav, navigationGroup);
                     }
                 });
             }
@@ -225,7 +219,7 @@ export default class MarkdownTheme extends Theme {
         return navigation;
     }
 
-    getEntryPoint(project: ProjectReflection): ContainerReflection {
+    private getEntryPoint(project: ProjectReflection): ContainerReflection {
         const entryPoint = this.owner.entryPoint;
         if (entryPoint) {
             const reflection = project.getChildByName(entryPoint);
@@ -243,7 +237,7 @@ export default class MarkdownTheme extends Theme {
         return project;
     }
 
-    buildUrls(reflection: DeclarationReflection, urls: UrlMapping[]): UrlMapping[] {
+    private buildUrls(reflection: DeclarationReflection, urls: UrlMapping[]): UrlMapping[] {
         const mapping = MarkdownTheme.getMapping(reflection);
         if (mapping) {
             if (!reflection.url || !DefaultTheme.URL_PREFIX.test(reflection.url)) {
@@ -266,7 +260,7 @@ export default class MarkdownTheme extends Theme {
         return urls;
     }
 
-    applyAnchorUrl(reflection: Reflection, container: Reflection) {
+    private applyAnchorUrl(reflection: Reflection, container: Reflection) {
         if (!reflection.url || !DefaultTheme.URL_PREFIX.test(reflection.url)) {
             reflection.url = container.url + '#' + this.getAnchor(reflection);
             reflection.anchor = this.getAnchor(reflection);
@@ -279,11 +273,11 @@ export default class MarkdownTheme extends Theme {
         });
     }
 
-    getAnchor(reflection: Reflection) {
+    private getAnchor(reflection: Reflection) {
         return MarkdownTheme.getAnchorRef(reflection);
     }
 
-    static getAnchorRef(reflection: Reflection) {
+    private static getAnchorRef(reflection: Reflection) {
         function parseAnchorRef(ref: string) {
             return ref.replace(/"/g, '').replace(/ /g, '-');
         }
@@ -295,7 +289,7 @@ export default class MarkdownTheme extends Theme {
         return anchorRef.toLowerCase();
     }
 
-    static getURL(reflection: Reflection, mapping: TemplateMapping): string {
+    private static getURL(reflection: Reflection, mapping: TemplateMapping): string {
         if (reflection.kind === ReflectionKind.Module || reflection.kind === ReflectionKind.ExternalModule) {
             return `${mapping.directory}/${reflection.sources[0].file.fileName}.md`;
         }
