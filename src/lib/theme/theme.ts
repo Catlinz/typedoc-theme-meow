@@ -5,6 +5,7 @@ import { ContainerReflection, DeclarationReflection, ProjectReflection, Reflecti
 import { DefaultTheme, TemplateMapping } from 'typedoc/dist/lib/output/themes/DefaultTheme';
 import { UrlMapping } from 'typedoc/dist/lib/output/models/UrlMapping';
 import { Theme } from 'typedoc/dist/lib/output/theme';
+import { reflection_anchor } from './helpers/reflection-any';
 
 export default class MarkdownTheme extends Theme {
     /**
@@ -262,8 +263,9 @@ export default class MarkdownTheme extends Theme {
 
     private applyAnchorUrl(reflection: Reflection, container: Reflection) {
         if (!reflection.url || !DefaultTheme.URL_PREFIX.test(reflection.url)) {
-            reflection.url = container.url + '#' + this.getAnchor(reflection);
-            reflection.anchor = this.getAnchor(reflection);
+            const anchor = MarkdownTheme.getAnchorRef(reflection);
+            reflection.url = container.url + '#' + anchor;
+            reflection.anchor = anchor;
             reflection.hasOwnDocument = false;
         }
         reflection.traverse(child => {
@@ -273,20 +275,8 @@ export default class MarkdownTheme extends Theme {
         });
     }
 
-    private getAnchor(reflection: Reflection) {
-        return MarkdownTheme.getAnchorRef(reflection);
-    }
-
     private static getAnchorRef(reflection: Reflection) {
-        function parseAnchorRef(ref: string) {
-            return ref.replace(/"/g, '').replace(/ /g, '-');
-        }
-        let anchorPrefix = '';
-        reflection.flags.forEach(flag => (anchorPrefix += `${flag}-`));
-        const prefixRef = parseAnchorRef(anchorPrefix);
-        const reflectionRef = parseAnchorRef(reflection.name);
-        const anchorRef = prefixRef + reflectionRef;
-        return anchorRef.toLowerCase();
+        return reflection_anchor(reflection);
     }
 
     private static getURL(reflection: Reflection, mapping: TemplateMapping): string {

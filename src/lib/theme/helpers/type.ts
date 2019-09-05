@@ -11,7 +11,7 @@ import {
     TypeOperatorType,
     UnionType,
 } from 'typedoc/dist/lib/models/types';
-import { INLINE, JOIN_COMMA, JOIN_PIPE, TYPE_VOID, TYPE_UNKNOWN, EMPTY_STR, DBL_QUOTE_STR, JOIN_AND, BRACE_CURLY_CLOSE, BRACE_CURLY_OPEN, TICK_STR, BRACKET_CLOSE, BRACKET_OPEN, BRACKET_EMPTY } from './constants';
+import { INLINE, JOIN_COMMA, JOIN_PIPE, TYPE_VOID, TYPE_UNKNOWN, EMPTY_STR, DBL_QUOTE_STR, JOIN_AND, BRACE_CURLY_CLOSE, BRACE_CURLY_OPEN, TICK_STR, BRACKET_CLOSE, BRACKET_OPEN, BRACKET_EMPTY, TYPE_START, TYPE_END } from './constants';
 import { formatURLStr, properURL } from './formatting-basic';
 import { signature } from './reflection-signature';
 
@@ -168,6 +168,3 @@ function getIntrinsicType(model: IntrinsicType) {
 function getStringLiteralType(model: StringLiteralType) {
     return DBL_QUOTE_STR + model.value + DBL_QUOTE_STR;
 }
-
-export const TYPE_START = '‹';
-export const TYPE_END = '›';

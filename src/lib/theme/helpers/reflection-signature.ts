@@ -8,6 +8,7 @@ import { typeParameters } from './type-parameters';
 import { memberVisibilitySymbol } from './member';
 import { sources } from './reflection-sources';
 import { type } from './type';
+import { toAchorString } from './formatting-basic';
 
 export function signature(this: SignatureReflection, headingLevel: number = 0, inline?: 'inline'): string {
     if (inline === INLINE) { return signature_inline(this); }
@@ -102,6 +103,10 @@ export function signature_type(ref: SignatureReflection|SignatureReflection[], h
     if (sig.type) { text.push(COLON_SPACED_STR, type.call(sig.type) as string); }
 
     return text.join(EMPTY_STR);
+}
+
+export function signature_anchor(ref: SignatureReflection): string {
+    return toAchorString(signatureTitle.call(ref, ref.parent && ref.parent.kind !== ReflectionKind.Function) as string);
 }
 
 const __GET = '__get';

@@ -28,6 +28,8 @@ export const DASH_STR = '-';
 export const ASTERISK = '*';
 export const COLON = ':';
 
+export const DBL_DASH = '--';
+
 export const PIPE_SPACED = ' | ';
 
 export const THREE_DOTS = '...';
@@ -38,6 +40,9 @@ export const JOIN_AND = '&';
 export const NBSP = '&nbsp;';
 
 export const INLINE = 'inline';
+
+export const TYPE_START = '‹';
+export const TYPE_END = '›';
 
 export const TYPE_STRING = 'string';
 export const TYPE_NUMBER = 'number';

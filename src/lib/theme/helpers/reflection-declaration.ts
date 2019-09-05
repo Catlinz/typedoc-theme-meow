@@ -6,6 +6,7 @@ import { memberVisibilitySymbol } from './member';
 import { comment } from './reflection-comment';
 import { sources } from './reflection-sources';
 import { type } from './type';
+import { toAchorString } from './formatting-basic';
 
 export function declaration(this: DeclarationReflection, headingLevel: number = 0, inline?: 'inline'): string {
     if (inline === INLINE) { return declaration_inline(this); }
@@ -57,6 +58,10 @@ function declaration_title(ref: DeclarationReflection, showSymbol: boolean) {
     }
 
     return text.join(SPACE_STR);
+}
+
+export function declaration_anchor(ref: DeclarationReflection): string {
+    return toAchorString(declaration_title(ref, ref.kind === ReflectionKind.Property));
 }
 
 const STATIC_PREFIX = '🅢';

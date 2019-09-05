@@ -1,7 +1,7 @@
 import { DeclarationReflection } from 'typedoc';
 
-import { DBL_NEWLINE, EMPTY_STR, INLINE, SPACE_STR, TICK_STR, TYPE_NUMBER, BRACE_CLOSE, COLON_SPACED_STR, EQUAL_SPACED_STR } from './constants';
-import { heading, lowercase } from './formatting-basic';
+import { DBL_NEWLINE, EMPTY_STR, INLINE, SPACE_STR, TICK_STR, TYPE_NUMBER, BRACE_CLOSE, COLON_SPACED_STR, EQUAL_SPACED_STR, DASH_STR, DBL_DASH } from './constants';
+import { heading, lowercase, toAchorString } from './formatting-basic';
 import { typeParameters } from './type-parameters';
 import { typeAndValue } from './type-and-value';
 import { comment } from './reflection-comment';
@@ -26,6 +26,12 @@ export function variable(this: DeclarationReflection, headingLevel: number = 0, 
     return (headingStr ? headingStr + SPACE_STR : EMPTY_STR) + text.join(EMPTY_STR) + (commentText ? DBL_NEWLINE + commentText : EMPTY_STR);
 }
 
+export function variable_anchor(ref: DeclarationReflection): string {
+    const textBase = ref.name+ DBL_DASH + (typeAndValue.call(ref) as string) + DASH_STR;
+    
+    return toAchorString((ref.flags && ref.flags.length) ? lowercase(ref.flags) + DASH_STR + textBase : textBase);
+}
+
 export function typeAlias(this: DeclarationReflection, headingLevel: number = 0, inline: 'inline'): string {
     const text: string[] = [TICK_STR];
 
@@ -37,6 +43,10 @@ export function typeAlias(this: DeclarationReflection, headingLevel: number = 0,
     const headingStr = _getHeadingString(headingLevel);
 
     return (headingStr ? headingStr + SPACE_STR : EMPTY_STR) + text.join(EMPTY_STR) + (commentText ? DBL_NEWLINE + commentText : EMPTY_STR);
+}
+
+export function type_alias_anchor(ref: DeclarationReflection): string {
+    return toAchorString(ref.name + typeParameters(ref.typeParameters) + DBL_DASH + (type.call(ref) as string));
 }
 
 export function _getHeadingString(headingLevel: number): string {
