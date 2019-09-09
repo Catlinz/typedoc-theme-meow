@@ -26,7 +26,7 @@ export function member(this: DeclarationReflection, headingLevel?: number): stri
     }
     else {
         const declaration = (require('./reflection-declaration') as typeof import('./reflection-declaration')).declaration;
-        lines.push(declaration.call(this, 3) as string);
+        lines.push(declaration.call(this, 4) as string);
     }
 
     return lines.join(DBL_NEWLINE);

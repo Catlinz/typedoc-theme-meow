@@ -128,9 +128,15 @@ function getReflectionType(model: ReflectionType) {
         return model.declaration.signatures.map(it => signature.call(it, 0, INLINE) as string).join(JOIN_PIPE);
     }
 
+    if (model.declaration.kind === ReflectionKind.ObjectLiteral) {
+        return BRACE_CURLY_OPEN+BRACE_CURLY_CLOSE;
+    }
+
     if (model.declaration.type) {
         return type.call(model.declaration.type);
     }
+
+    return JSON.stringify(model.declaration.typeParameters);
 
     return model.declaration ? model.declaration.name : TYPE_UNKNOWN;
 }
