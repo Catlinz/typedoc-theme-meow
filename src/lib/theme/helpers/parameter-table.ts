@@ -30,10 +30,10 @@ export function parameterTable(this: ParameterReflection[]) {
         if (hasComments) {
             const commentsText = [];
             if (parameter.comment && parameter.comment.shortText) {
-                commentsText.push(parseCommentText.call(stripLineBreaks.call(parameter.comment.shortText), false));
+                commentsText.push(parseCommentText(stripLineBreaks.call(parameter.comment.shortText) as string, false));
             }
             if (parameter.comment && parameter.comment.text) {
-                commentsText.push(parseCommentText.call(stripLineBreaks.call(parameter.comment.text), false));
+                commentsText.push(parseCommentText(stripLineBreaks.call(parameter.comment.text) as string, false));
             }
             row.push(commentsText.length > 0 ? commentsText.join(SPACE_STR) : DASH_STR);
         }
