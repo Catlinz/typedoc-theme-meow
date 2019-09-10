@@ -136,9 +136,7 @@ function getReflectionType(model: ReflectionType) {
         return type.call(model.declaration.type);
     }
 
-    return JSON.stringify(model.declaration.typeParameters);
-
-    return model.declaration ? model.declaration.name : TYPE_UNKNOWN;
+    return (model.declaration && model.declaration.name !== '__type') ? model.declaration.name : TYPE_UNKNOWN;
 }
 
 function getReferenceType(model: ReferenceType) {
