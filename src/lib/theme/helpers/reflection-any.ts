@@ -3,12 +3,16 @@ import { DeclarationReflection, Reflection, ReflectionKind } from 'typedoc';
 import { DBL_NEWLINE, THREE_DOTS, EMPTY_STR, QUESTION_STR } from './constants';
 import { typeAlias, variable, variable_anchor, type_alias_anchor } from './reflection-basic';
 import { signature } from './reflection-signature';
+import { event, event_anchor } from './reflection-event';
 import { enumMember } from './reflection-enum';
 import { member } from './member';
 import { declaration_anchor } from './reflection-declaration';
 
 export function reflection(this: Reflection, headingLevel: number = 0, inline?: 'inline'): string {
     switch (this.kind) {
+        case ReflectionKind.Event:
+            return event.call(this, headingLevel, inline) as string;
+
         case ReflectionKind.Variable:
             return variable.call(this, headingLevel, inline) as string;
 
@@ -51,6 +55,9 @@ export function reflection_name(ref: Reflection) {
 
 export function reflection_anchor(ref: Reflection) {
     switch (ref.kind) {
+        case ReflectionKind.Event:
+            return event_anchor(ref as DeclarationReflection);
+            
         case ReflectionKind.Variable:
             return variable_anchor(ref as DeclarationReflection);
         

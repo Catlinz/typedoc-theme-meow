@@ -55,3 +55,5 @@ export const TABLE_COL_NAME = 'Name';
 export const TABLE_COL_TYPE = 'Type';
 export const TABLE_COL_DEFAULT = 'Default';
 export const TABLE_COL_DESC = 'Description';
+
+export const STATIC_PREFIX = '🅢';

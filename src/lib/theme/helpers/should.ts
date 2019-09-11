@@ -8,6 +8,7 @@ export function shouldShowHR(this: Reflection): boolean {
         case ReflectionKind.Variable:
         case ReflectionKind.EnumMember:
         case ReflectionKind.Property:
+        case ReflectionKind.Event:
             return false;
         default:
             return true;

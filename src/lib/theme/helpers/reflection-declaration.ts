@@ -1,6 +1,6 @@
 import { DeclarationReflection, ReflectionKind } from 'typedoc';
 
-import { DBL_NEWLINE, EMPTY_STR, INLINE, QUESTION_STR, SPACE_STR, TICK_STR } from './constants';
+import { DBL_NEWLINE, EMPTY_STR, INLINE, QUESTION_STR, SPACE_STR, TICK_STR, STATIC_PREFIX } from './constants';
 import { _getHeadingString } from './reflection-basic';
 import { memberVisibilitySymbol } from './member';
 import { comment } from './reflection-comment';
@@ -64,6 +64,5 @@ export function declaration_anchor(ref: DeclarationReflection): string {
     return toAchorString(declaration_title(ref, ref.kind === ReflectionKind.Property));
 }
 
-const STATIC_PREFIX = '🅢';
 const TYPE_SEPARATOR = ':';
 const EQUALS = '= ';
