@@ -36,6 +36,8 @@ export default class MarkdownTheme extends Theme {
     private navigation: NavigationItem;
     private navigationTitlesMap = {};
 
+    public static rootReflection?: ProjectReflection;
+
     // tslint:disable-next-line: no-any
     constructor(renderer: Renderer, basePath: string, options: any) {
         super(renderer, basePath);
@@ -76,6 +78,8 @@ export default class MarkdownTheme extends Theme {
     }
 
     public getUrls(project: ProjectReflection): UrlMapping[] {
+        MarkdownTheme.rootReflection = project;
+        
         const urls: UrlMapping[] = [];
         const entryPoint = this.getEntryPoint(project);
 

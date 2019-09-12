@@ -44,5 +44,5 @@ export function event_title(ref: DeclarationReflection, showSymbol?: boolean): s
 }
 
 export function event_anchor(ref: DeclarationReflection): string {
-    return toAchorString(event_title(ref));
+    return toAchorString(event_title(ref, ref.parent && (ref.parent.kind & ReflectionKind.ClassOrInterface) !== 0));
 }
