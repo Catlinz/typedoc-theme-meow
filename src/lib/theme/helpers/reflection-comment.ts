@@ -2,6 +2,7 @@ import { CommentTag, Reflection } from 'typedoc/dist/lib/models';
 
 import { DBL_NEWLINE, TYPE_BOOLEAN, EMPTY_STR, NEWLINE, SHORT_DBL_NEWLINE, DBL_STAR_STR, STAR_STR, SPACE_STR } from './constants';
 import { find_reflection_string } from './reflection-utils';
+import { stripLineBreaks } from './formatting-basic';
 
 export function comment(this: Reflection, withQuotes: boolean): string {
     if (!this || !this.comment) { return EMPTY_STR; }
@@ -99,7 +100,7 @@ function parse_throws_tag(tag: CommentTag): string {
 }
 
 function parse_todo_tag(tag: CommentTag): string {
-    const text = STAR_STR + parseCommentText(tag.text).trim() + STAR_STR;
+    const text = STAR_STR + stripLineBreaks(parseCommentText(tag.text)).trim() + STAR_STR;
     return TODO_SYMBOL + DBL_STAR_STR + tag.tagName.toUpperCase() + DBL_STAR_STR + SPACE_STR + text;
 
 }

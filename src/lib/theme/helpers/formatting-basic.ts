@@ -18,8 +18,8 @@ export function lowercase(values: string|string[]): string {
     return (values as string[]).map(it => it.toLowerCase()).join(SPACE_STR);
 }
 
-export function stripLineBreaks(this: string) {
-    return this.replace(NEWLINE_RE, SPACE_STR);
+export function stripLineBreaks(str: string) {
+    return str.replace(NEWLINE_RE, SPACE_STR);
 }
 
 export function properURL(this: Reflection|void, url?: string) {
