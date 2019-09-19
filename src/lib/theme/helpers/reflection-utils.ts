@@ -4,7 +4,7 @@ import { formatURLStr, properURL } from './formatting-basic';
 import { TICK_STR } from './constants';
 
 export function find_reflection(name: string|string[]): Reflection|null {
-    const names = Array.isArray(name) ? name : name.split('.');
+    const names = Array.isArray(name) ? name : name.split(SPLIT_RE);
 
     let reflection = find_reflection_by_name(names.shift());
 
@@ -49,3 +49,5 @@ function find_reflection_by_name(name: string, from?: Reflection): Reflection|nu
 
     return null;
 }
+
+const SPLIT_RE = /[\.#]/g;

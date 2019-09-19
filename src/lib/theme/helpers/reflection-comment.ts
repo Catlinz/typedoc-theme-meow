@@ -41,6 +41,7 @@ export function parseCommentTags(tags: CommentTag[]): string {
     const throws: string[] = [];
     const todo: string[] = [];
     const example: string[] = [];
+    const see: string[] = [];
     
     for (const tag of tags) {
         switch (tag.tagName.toLowerCase()) {
@@ -56,6 +57,9 @@ export function parseCommentTags(tags: CommentTag[]): string {
             case TAG_EXAMPLE:
                 example.push(parse_example_tag(tag));
                 break;
+            case TAG_SEE:
+                see.push(parse_see_tag(tag));
+                break;
             default:
                 generic.push(DBL_STAR_STR + tag.tagName + DBL_STAR_STR + parseCommentText(tag.text));
                 break;
@@ -67,6 +71,7 @@ export function parseCommentTags(tags: CommentTag[]): string {
     if (generic.length) { lines.push(generic.join(SHORT_DBL_NEWLINE)); }
     if (emits.length) { lines.push(emits.join(SHORT_DBL_NEWLINE)); }
     if (throws.length) { lines.push(throws.join(SHORT_DBL_NEWLINE)); }
+    if (see.length) { lines.push(see.join(SHORT_DBL_NEWLINE)); }
     if (todo.length) { lines.push(todo.join(NEWLINE)); }
     if (example.length) { lines.push(example.join(DBL_NEWLINE)); }
 
@@ -86,6 +91,17 @@ function parse_emits_tag(tag: CommentTag): string {
 
 function parse_example_tag(tag: CommentTag): string {
     return DBL_STAR_STR + tag.tagName + DBL_STAR_STR + NEWLINE + '```typescript' + tag.text + '```';
+}
+
+function parse_see_tag(tag: CommentTag): string {
+    const text: string[] = [SEE_SYMBOL + DBL_STAR_STR + tag.tagName + DBL_STAR_STR];
+    const typeStr = find_reflection_string(pull_type_param_name(tag));
+    const seeComment = parseCommentText(tag.text.trim());
+
+    if (typeStr) { text.push(typeStr); }
+    if (seeComment) { text.push(seeComment); }
+
+    return text.join(SPACE_STR);
 }
 
 function parse_throws_tag(tag: CommentTag): string {
@@ -109,19 +125,23 @@ function pull_type_param_name(tag: CommentTag): string {
     if (tag.paramName) { return tag.paramName; }
     if (!tag.text) { return EMPTY_STR; }
 
+    let typeStr: string = EMPTY_STR;
+
     const match = tag.text.match(PARAM_RE_BR);
     if (match && match[1]) {
         tag.text = tag.text.replace(match[0], EMPTY_STR);
-        return match[1]; 
+        typeStr = match[1].replace('()', ''); 
     }
 
-    const match2 = tag.text.match(PARAM_RE);
-    if (match2 && match2[1]) {
-        tag.text = tag.text.replace(match2[0], EMPTY_STR);
-        return match2[1];
+    if (!typeStr) {
+        const match2 = tag.text.match(PARAM_RE);
+        if (match2 && match2[1]) {
+            tag.text = tag.text.replace(match2[0], EMPTY_STR);
+            typeStr =  match2[1];
+        }
     }
 
-    return EMPTY_STR;
+    return typeStr;
 }
 
 const QUOTE_START = '>';
@@ -130,11 +150,13 @@ const QUOTE_END = '\n>';
 const EMIT_SYMBOL = '🗲 ';
 const THROWS_SYMBOL = '☢ ';
 const TODO_SYMBOL = '- [ ] ';
+const SEE_SYMBOL = '👁 ';
 
 const TAG_EXAMPLE = 'example';
 const TAG_EMITS = 'emits';
 const TAG_THROWS = 'throws';
 const TAG_TODO = 'todo';
+const TAG_SEE = 'see';
 
-const PARAM_RE_BR = /^\s*\{([a-zA-Z0-9]+)\}/;
-const PARAM_RE = /^\s*([a-zA-Z0-9]+)/;
+const PARAM_RE_BR = /^\s*\{([a-zA-Z0-9\._#]+)\}/;
+const PARAM_RE = /^\s*([a-zA-Z0-9\._#]+)/;
