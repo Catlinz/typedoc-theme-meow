@@ -9,6 +9,8 @@ import { memberVisibilitySymbol } from './member';
 import { sources } from './reflection-sources';
 import { type } from './type';
 import { toAchorString } from './formatting-basic';
+import { ReflectionType } from 'typedoc/dist/lib/models';
+import { nested_object_literal } from './reflection-object-literal';
 
 export function signature(this: SignatureReflection, headingLevel: number = 0, inline?: 'inline'): string {
     if (inline === INLINE) { return signature_inline(this); }
@@ -100,7 +102,14 @@ export function signature_type(ref: SignatureReflection|SignatureReflection[], h
         text.push(BRACES_EMPTY);
     }
 
-    if (sig.type) { text.push(COLON_SPACED_STR, type.call(sig.type) as string); }
+    if (sig.type) {
+        if (sig.name === 'serialize' && sig.type instanceof ReflectionType && sig.type.declaration.kind === ReflectionKind.TypeLiteral) {
+            text.push(COLON_SPACED_STR, nested_object_literal(sig.type.declaration)); 
+        }
+        else {
+            text.push(COLON_SPACED_STR, type.call(sig.type) as string); 
+        }
+    }
 
     return text.join(EMPTY_STR);
 }
