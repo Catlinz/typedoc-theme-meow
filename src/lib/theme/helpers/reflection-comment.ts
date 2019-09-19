@@ -60,6 +60,8 @@ export function parseCommentTags(tags: CommentTag[]): string {
             case TAG_SEE:
                 see.push(parse_see_tag(tag));
                 break;
+            case TAG_OVERRIDE:
+                break;
             default:
                 generic.push(DBL_STAR_STR + tag.tagName + DBL_STAR_STR + parseCommentText(tag.text));
                 break;
@@ -157,6 +159,7 @@ const TAG_EMITS = 'emits';
 const TAG_THROWS = 'throws';
 const TAG_TODO = 'todo';
 const TAG_SEE = 'see';
+const TAG_OVERRIDE = 'override';
 
 const PARAM_RE_BR = /^\s*\{([a-zA-Z0-9\._#]+)\}/;
 const PARAM_RE = /^\s*([a-zA-Z0-9\._#]+)/;
