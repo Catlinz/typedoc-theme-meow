@@ -114,8 +114,10 @@ export function signature_type(ref: SignatureReflection|SignatureReflection[], h
     return text.join(EMPTY_STR);
 }
 
-export function signature_anchor(ref: SignatureReflection): string {
-    return toAchorString(signatureTitle.call(ref, ref.parent && ref.parent.kind !== ReflectionKind.Function) as string);
+export function signature_anchor(ref: SignatureReflection|SignatureReflection[]): string {
+    const sig = Array.isArray(ref) ? ref[0] : ref;
+
+    return toAchorString(signatureTitle.call(sig, sig.parent && sig.parent.kind !== ReflectionKind.Function) as string);
 }
 
 const __GET = '__get';
