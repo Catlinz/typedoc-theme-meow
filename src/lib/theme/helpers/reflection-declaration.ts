@@ -1,12 +1,13 @@
 import { DeclarationReflection, ReflectionKind } from 'typedoc';
 
 import { DBL_NEWLINE, EMPTY_STR, INLINE, QUESTION_STR, SPACE_STR, TICK_STR, STATIC_PREFIX } from './constants';
+import { should_show_default_value } from './type-and-value';
 import { _getHeadingString } from './reflection-basic';
+import { toAchorString } from './formatting-basic';
 import { memberVisibilitySymbol } from './member';
 import { comment } from './reflection-comment';
 import { sources } from './reflection-sources';
 import { type } from './type';
-import { toAchorString } from './formatting-basic';
 
 export function declaration(this: DeclarationReflection, headingLevel: number = 0, inline?: 'inline'): string {
     if (inline === INLINE) { return declaration_inline(this); }
@@ -50,10 +51,10 @@ function declaration_title(ref: DeclarationReflection, showSymbol: boolean) {
         const typeStr = type.call(ref.type) as string;
         text.push(typeStr);
 
-        if (ref.defaultValue && ref.defaultValue !== typeStr) {
+        if (should_show_default_value(ref, typeStr)) {
             text.push(EQUALS + ref.defaultValue);
         }
-    } else if (ref.defaultValue) {
+    } else if (should_show_default_value(ref)) {
         text.push(EQUALS + ref.defaultValue);
     }
 
