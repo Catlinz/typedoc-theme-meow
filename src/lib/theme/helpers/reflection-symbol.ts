@@ -2,8 +2,9 @@ import { Reflection, ReflectionKind } from 'typedoc';
 
 import { EMPTY_STR } from './constants';
 
-export function reflectionSymbol(this: Reflection): string {
-    switch (this.kind) {
+export function reflectionSymbol(this: Reflection|void, ref?: Reflection): string {
+    ref = (ref && ref instanceof Reflection) ? ref : this as Reflection;
+    switch (ref.kind) {
         case ReflectionKind.Class:
             return SYM_CLASS;
 

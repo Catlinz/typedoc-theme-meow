@@ -19,10 +19,10 @@ export function shouldShowIndex(this: Reflection): boolean {
     return !!this && this.kind === ReflectionKind.Global;
 }
 
-export function shouldShowMemberTitle(this: DeclarationReflection): boolean {
-    if (!this || !this.name) { return false; }
+export function shouldShowMemberTitle(ref: DeclarationReflection): boolean {
+    if (!ref || !ref.name) { return false; }
 
-    switch (this.kind) {
+    switch (ref.kind) {
         case ReflectionKind.Constructor:
         case ReflectionKind.Property:
         case ReflectionKind.Accessor:

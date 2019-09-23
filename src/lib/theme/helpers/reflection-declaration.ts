@@ -9,20 +9,20 @@ import { comment } from './reflection-comment';
 import { sources } from './reflection-sources';
 import { type } from './type';
 
-export function declaration(this: DeclarationReflection, headingLevel: number = 0, inline?: 'inline'): string {
-    if (inline === INLINE) { return declaration_inline(this); }
+export function declaration(ref: DeclarationReflection, headingLevel: number = 0, inline?: 'inline'): string {
+    if (inline === INLINE) { return declaration_inline(ref); }
 
     const lines: string[] = [];
 
-    lines.push(declaration_title(this, this.kind === ReflectionKind.Property));
+    lines.push(declaration_title(ref, ref.kind === ReflectionKind.Property));
 
-    const commentStr = comment.call(this, true) as string;
+    const commentStr = comment.call(ref, true) as string;
     if (commentStr) {
         lines.push(commentStr);
     }
 
-    if (this.kind !== ReflectionKind.Function) {
-        lines.push(sources.call(this) as string);
+    if (ref.kind !== ReflectionKind.Function) {
+        lines.push(sources(ref));
     }
 
     const headingStr = _getHeadingString(headingLevel);

@@ -17,10 +17,10 @@ export function signature(this: SignatureReflection, headingLevel: number = 0, i
 
     const lines: string[] = [];
 
-    lines.push(signatureTitle.call(this, this.parent.kind !== ReflectionKind.Function) as string);
+    lines.push(signatureTitle(this, this.parent.kind !== ReflectionKind.Function));
 
     if (this.parameters && this.parameters.length) {
-        lines.push(parameterTable.call(this.parameters) as string);
+        lines.push(parameterTable(this.parameters));
     }
 
     if (this.comment) {
@@ -35,7 +35,7 @@ export function signature(this: SignatureReflection, headingLevel: number = 0, i
     }
 
     if (this.kind !== ReflectionKind.Function) {
-        lines.push(sources.call(this) as string);
+        lines.push(sources(this));
     }
 
     const headingStr = _getHeadingString(headingLevel);
@@ -52,16 +52,16 @@ function signature_inline(ref: SignatureReflection) {
     return text.join(EMPTY_STR);
 }
 
-export function signatureTitle(this: SignatureReflection, showSymbol: boolean = false) {
+export function signatureTitle(ref: SignatureReflection, showSymbol: boolean = false) {
     const text: string[] = [];
 
     if (showSymbol === true) {
-        if (this.parent.flags.isStatic) { text.push(STATIC_PREFIX); }
-        text.push(memberVisibilitySymbol(this) + SPACE_STR);
+        if (ref.parent.flags.isStatic) { text.push(STATIC_PREFIX); }
+        text.push(memberVisibilitySymbol(ref) + SPACE_STR);
     }
 
-    text.push(TICK_STR + signature_name(this));
-    text.push(signature_type(this, true).replace(' :', '` :'));
+    text.push(TICK_STR + signature_name(ref));
+    text.push(signature_type(ref, true).replace(' :', '` :'));
 
     return text.join(EMPTY_STR);
 }
@@ -117,7 +117,7 @@ export function signature_type(ref: SignatureReflection|SignatureReflection[], h
 export function signature_anchor(ref: SignatureReflection|SignatureReflection[]): string {
     const sig = Array.isArray(ref) ? ref[0] : ref;
 
-    return toAchorString(signatureTitle.call(sig, sig.parent && sig.parent.kind !== ReflectionKind.Function) as string);
+    return toAchorString(signatureTitle(sig, sig.parent && sig.parent.kind !== ReflectionKind.Function));
 }
 
 const __GET = '__get';

@@ -6,16 +6,16 @@ import { parseCommentText } from './reflection-comment';
 import { stripLineBreaks } from './formatting-basic';
 import { type } from './type';
 
-export function parameterTable(this: ParameterReflection[]) {
-    const hasDefaultValues = this.some(boolCheck);
-    const hasComments = this.some(commentCheck);
+export function parameterTable(ref: ParameterReflection[]) {
+    const hasDefaultValues = ref.some(boolCheck);
+    const hasComments = ref.some(commentCheck);
 
     const headers = [TABLE_COL_NAME, TABLE_COL_TYPE];
 
     if (hasDefaultValues) { headers.push(TABLE_COL_DEFAULT); }
     if (hasComments) { headers.push(TABLE_COL_DESC); }
 
-    const rows = this.map(parameter => {
+    const rows = ref.map(parameter => {
         const isOptional = parameter.flags.isOptional;
         const isRest = parameter.flags.isRest;
         const typeOut = getTypeOut(parameter);

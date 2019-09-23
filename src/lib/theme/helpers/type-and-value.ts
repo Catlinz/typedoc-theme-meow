@@ -3,11 +3,11 @@ import { DeclarationReflection } from 'typedoc';
 import { EQUAL_SPACED_STR } from './constants';
 import { type } from './type';
 
-export function typeAndValue(this: DeclarationReflection): string {
-    const typeStr = type.call(this.type) as string;
-    const defaultValue = this.defaultValue;
+export function typeAndValue(ref: DeclarationReflection): string {
+    const typeStr = type.call(ref.type) as string;
+    const defaultValue = ref.defaultValue;
 
-    if (should_show_default_value(this, typeStr)) {
+    if (should_show_default_value(ref, typeStr)) {
         return typeStr + EQUAL_SPACED_STR + defaultValue;
     } else {
         return typeStr;

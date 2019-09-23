@@ -11,22 +11,22 @@ import { declaration_anchor } from './reflection-declaration';
 export function reflection(this: Reflection, headingLevel: number = 0, inline?: 'inline'): string {
     switch (this.kind) {
         case ReflectionKind.Event:
-            return event.call(this, headingLevel, inline) as string;
+            return event(this, headingLevel, inline);
 
         case ReflectionKind.Variable:
-            return variable.call(this, headingLevel, inline) as string;
+            return variable(this as DeclarationReflection, headingLevel, inline);
 
         case ReflectionKind.Function:
             return (this as DeclarationReflection).signatures.map(it => signature.call(it, headingLevel, inline) as string).join(DBL_NEWLINE);
 
         case ReflectionKind.TypeAlias:
-            return typeAlias.call(this, headingLevel, inline) as string;
+            return typeAlias(this as DeclarationReflection, headingLevel, inline);
 
         case ReflectionKind.ObjectLiteral:
             return require('./reflection-object-literal').objectLiteral.call(this, headingLevel, inline, 0);
 
         case ReflectionKind.EnumMember:
-            return enumMember.call(this, headingLevel) as string;
+            return enumMember(this, headingLevel);
 
         case ReflectionKind.CallSignature:
             return signature.call(this, headingLevel, inline) as string;

@@ -18,7 +18,7 @@ export function globalIndex(this: ProjectReflection): string {
                     tables[headerStr] = table;
                 }
         
-                tables[headerStr].add(formatURLStr(reflectionSymbol.call(child) + NBSP + child.name, properURL(child.url)));
+                tables[headerStr].add(formatURLStr(reflectionSymbol(child) + NBSP + child.name, properURL(child.url)));
             }
         }
     }

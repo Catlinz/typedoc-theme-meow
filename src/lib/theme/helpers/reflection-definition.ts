@@ -3,16 +3,18 @@ import { DeclarationReflection } from 'typedoc';
 import { DBL_NEWLINE, EMPTY_STR, ASTERISK, COLON } from './constants';
 import { formatURLStr } from './formatting-basic';
 
-export function definition(this: DeclarationReflection): string {
+export function definition(this: DeclarationReflection|void, ref: DeclarationReflection): string {
     const lines: string[] = [];
+    ref = (ref && ref instanceof DeclarationReflection) ? ref : this as DeclarationReflection;
 
-    if (this.sources && this.sources.length > 0) {
-        lines.push(DEFINED_AT + formatURLStr(ASTERISK + this.sources[0].file.fileName + COLON + this.sources[0].line + ASTERISK, this.sources[0].url));
+    if (ref.sources && ref.sources.length > 0) {
+        const firstSource = ref.sources[0];
+        lines.push(DEFINED_AT + formatURLStr(ASTERISK + firstSource.file.fileName + COLON + firstSource.line + ASTERISK, firstSource.url));
     }
 
-    if (this.sources.length > 1) {
-        for (let i = 1; i < this.sources.length; ++i) {
-            const source = this.sources[i];
+    if (ref.sources.length > 1) {
+        for (let i = 1; i < ref.sources.length; ++i) {
+            const source = ref.sources[i];
             lines.push(ALSO_DEFINED_AT, formatURLStr(ASTERISK + source.file.fileName + COLON + source.line + ASTERISK, source.url));
         }
     }

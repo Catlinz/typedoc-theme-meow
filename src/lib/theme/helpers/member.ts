@@ -1,4 +1,4 @@
-import { DeclarationReflection, ReflectionKind, Reflection } from 'typedoc';
+import { DeclarationReflection, ReflectionKind, Reflection, ContainerReflection } from 'typedoc';
 import { heading, formatURLStr } from './formatting-basic';
 import { shouldShowMemberTitle } from './should';
 import { DBL_NEWLINE, SPACE_STR, TICK_STR } from './constants';
@@ -7,8 +7,8 @@ export function member(this: DeclarationReflection, headingLevel?: number): stri
     const lines: string[] = [];
     const signature = (require('./reflection-signature') as typeof import('./reflection-signature')).signature;
 
-    if (shouldShowMemberTitle.call(this)) {
-        lines.push(memberTitle.call(this, headingLevel) as string);
+    if (shouldShowMemberTitle(this)) {
+        lines.push(memberTitle(this, headingLevel));
     }
 
     if (this.signatures && this.signatures.length) {
@@ -24,20 +24,21 @@ export function member(this: DeclarationReflection, headingLevel?: number): stri
             lines.push(signature.call(this.setSignature, 3) as string);
         }
     }
-    else {
+    else if (!is_event_private_member(this)) {
+
         const declaration = (require('./reflection-declaration') as typeof import('./reflection-declaration')).declaration;
-        lines.push(declaration.call(this, 4) as string);
+        lines.push(declaration(this, 4));
     }
 
     return lines.join(DBL_NEWLINE);
 }
 
-export function memberTitle(this: DeclarationReflection, headingLevel?: number): string {
+export function memberTitle(ref: DeclarationReflection, headingLevel?: number): string {
   const md = [heading(headingLevel)];
-  if (this.flags) {
-    md.push(this.flags.map(flag => TICK_STR+flag+TICK_STR).join(SPACE_STR));
+  if (ref.flags) {
+    md.push(ref.flags.map(flag => TICK_STR+flag+TICK_STR).join(SPACE_STR));
   }
-  md.push(this.name);
+  md.push(ref.name);
   return md.join(SPACE_STR);
 }
 
@@ -54,6 +55,23 @@ export function memberVisibilitySymbol(ref: Reflection): string {
     } else {
         return symbol;
     }
+}
+
+export function is_event_private_member(ref: DeclarationReflection): boolean {
+    if (!ref || !ref.parent || !ref.flags || !(ref.flags.isPrivate || ref.flags.isProtected)) {
+        return false;
+    }
+
+    const parent = (ref.parent as ContainerReflection);
+    const testName = ref.name.substr(1);
+    
+    for (const child of parent.children) {
+        if (child.kind === ReflectionKind.Event && child.name === testName) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 const PARENT_TYPES = [

@@ -1,4 +1,4 @@
-import { ReferenceType, ReflectionKind } from 'typedoc/dist/lib/models';
+import { ReferenceType, ReflectionKind, Reflection } from 'typedoc/dist/lib/models';
 import { DeclarationReflection } from 'typedoc';
 
 import { EMPTY_STR, SPACE_STR, DBL_NEWLINE, TYPE_END, TICK_STR, STATIC_PREFIX } from './constants';
@@ -8,9 +8,9 @@ import { memberVisibilitySymbol } from './member';
 import { comment } from './reflection-comment';
 import { type } from './type';
 
-export function event(this: DeclarationReflection, headingLevel: number = 0, inline?: 'inline'): string {
-    const commentText = comment.call(this, true);
-    const title = event_title(this, (this.parent.kind & ReflectionKind.ClassOrInterface) !== 0);
+export function event(ref: Reflection, headingLevel: number = 0, inline?: 'inline'): string {
+    const commentText = comment.call(ref, true);
+    const title = event_title(ref as DeclarationReflection, (ref.parent.kind & ReflectionKind.ClassOrInterface) !== 0);
 
     return heading(headingLevel + 1) + SPACE_STR + title + (commentText ? DBL_NEWLINE + commentText : EMPTY_STR);
 }
@@ -18,12 +18,12 @@ export function event(this: DeclarationReflection, headingLevel: number = 0, inl
 export function event_type(ref: DeclarationReflection): string {
     if (ref.getSignature && ref.getSignature.type) {
         if ((ref.getSignature.type as ReferenceType).name === 'IEvent') {
-            return type.call((ref.getSignature.type as ReferenceType).typeArguments[0]);
+            return type.call((ref.getSignature.type as ReferenceType).typeArguments[0]) as string;
         }
-        return type.call(ref.getSignature.type);
+        return type.call(ref.getSignature.type) as string;
     }
 
-    return type.call(ref.type);
+    return type.call(ref.type) as string;
 }
 
 export function event_title(ref: DeclarationReflection, showSymbol?: boolean): string {

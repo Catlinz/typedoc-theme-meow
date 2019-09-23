@@ -1,28 +1,28 @@
-import { ArrayType, ReferenceType } from 'typedoc/dist/lib/models/types';
+import { ReferenceType, Type } from 'typedoc/dist/lib/models/types';
 import { SignatureReflection } from 'typedoc';
 
 import { properURL, formatURLStr } from './formatting-basic';
 import { DOT_STR, TYPE_VOID } from './constants';
 
-export function typeAndParent(this: ArrayType | ReferenceType) {
-  if (this instanceof ReferenceType && this.reflection) {
+export function typeAndParent(ref: Type) {
+  if (ref instanceof ReferenceType && ref.reflection) {
     const md = [];
-    if (this.reflection instanceof SignatureReflection) {
-      if (this.reflection.parent.parent.url) {
-        md.push(formatURLStr(this.reflection.parent.parent.name, properURL(this.reflection.parent.parent.url)));
+    if (ref.reflection instanceof SignatureReflection) {
+      if (ref.reflection.parent.parent.url) {
+        md.push(formatURLStr(ref.reflection.parent.parent.name, properURL(ref.reflection.parent.parent.url)));
       } else {
-        md.push(this.reflection.parent.parent.name);
+        md.push(ref.reflection.parent.parent.name);
       }
     } else {
-      if (this.reflection.parent.url) {
-        md.push(formatURLStr(this.reflection.parent.name, properURL(this.reflection.parent.url)));
+      if (ref.reflection.parent.url) {
+        md.push(formatURLStr(ref.reflection.parent.name, properURL(ref.reflection.parent.url)));
       } else {
-        md.push(this.reflection.parent.name);
+        md.push(ref.reflection.parent.name);
       }
-      if (this.reflection.url) {
-        md.push(formatURLStr(this.reflection.name, properURL(this.reflection.url)));
+      if (ref.reflection.url) {
+        md.push(formatURLStr(ref.reflection.name, properURL(ref.reflection.url)));
       } else {
-        md.push(this.reflection.name);
+        md.push(ref.reflection.name);
       }
     }
     return md.join(DOT_STR);

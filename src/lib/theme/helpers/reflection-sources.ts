@@ -1,21 +1,21 @@
-import { DeclarationReflection } from 'typedoc';
+import { DeclarationReflection, SignatureReflection } from 'typedoc';
 
 import { DBL_NEWLINE, STAR_STR } from './constants';
 import { typeAndParent } from './type-and-parent';
 
-export function sources(this: DeclarationReflection): string {
+export function sources(ref: DeclarationReflection|SignatureReflection): string {
     const lines: string[] = [];
 
-    if (this.implementationOf) {
-        lines.push(IMPLMENTATION_STR + typeAndParent.call(this.implementationOf) + STAR_STR);
+    if (ref.implementationOf) {
+        lines.push(IMPLMENTATION_STR + typeAndParent(ref.implementationOf) + STAR_STR);
     }
 
-    if (this.inheritedFrom) {
-        lines.push(INHERITED_STR + typeAndParent.call(this.inheritedFrom) + STAR_STR);
+    if (ref.inheritedFrom) {
+        lines.push(INHERITED_STR + typeAndParent(ref.inheritedFrom) + STAR_STR);
     }
 
-    if (this.overwrites) {
-        lines.push(OVERRIDE_STR + typeAndParent.call(this.overwrites) + STAR_STR);
+    if (ref.overwrites) {
+        lines.push(OVERRIDE_STR + typeAndParent(ref.overwrites) + STAR_STR);
     }
 
     return lines.join(DBL_NEWLINE);

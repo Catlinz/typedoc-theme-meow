@@ -13,7 +13,7 @@ function breadcrumb(model: Reflection, project: ProjectReflection, md: string[])
     if (model && model.parent) {
         breadcrumb(model.parent, project, md);
         if (model.url) {
-            md.push(formatURLStr(reflectionSymbol.call(model) + SPACE_STR + model.name, properURL(model.url)));
+            md.push(formatURLStr(reflectionSymbol(model) + SPACE_STR + model.name, properURL(model.url)));
         } else {
             md.push(model.url);
         }
